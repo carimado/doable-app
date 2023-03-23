@@ -13,7 +13,7 @@ function App() {
   return (
     <div className="App">
       <InputBox onTaskAdd={handleAddTask}/>
-      <TaskList tasks={tasks}/>
+      <TaskList tasks={tasks} setTask={setTask} />
     </div>
   );
 }
