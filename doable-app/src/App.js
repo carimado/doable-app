@@ -5,6 +5,7 @@ import { useState } from 'react';
 
 function App() {
   const [tasks, setTask] = useState([]);
+  console.log(tasks)
 
   const handleAddTask = (newTask) => {
     setTask([...tasks, newTask]);
