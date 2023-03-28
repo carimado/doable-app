@@ -1,7 +1,10 @@
 import { Checkbox } from "@mui/material";
 import { FaRegTrashAlt } from "react-icons/fa";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
+
+import { collection, query } from "firebase/firestore";
+import { db } from "./firebase";
 
 const style = {
     li: `flex justify-between items-center p-2 my-2 bg-slate-200 rounded-md`,
@@ -10,6 +13,18 @@ const style = {
 
 export default function TaskList({ setTask, tasks }) {
     const [isChecked, setIsChecked] = useState();
+
+    useEffect(() => {
+        const q = query(collection(db, "tasks"));
+        const unsubscribe = q.onSnapshot((querySnapshot) => {
+            const tasks = [];
+            querySnapshot.forEach((doc) => {
+                tasks.push(doc.data().task);
+            });
+            setTask(tasks);
+        }
+        );
+    }, []);
 
     const handleDeleteTask = (index) => {
         const newTasks = [...tasks];

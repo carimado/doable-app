@@ -12,7 +12,11 @@ const style = {
 
 function App() {
   const [tasks, setTask] = useState([]);
-  console.log(tasks)
+
+  // Create Todo
+  // Read Todo
+  // Update Todo
+  // Delete Todo
 
   const handleAddTask = (newTask) => {
     setTask([...tasks, newTask]);
