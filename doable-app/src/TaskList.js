@@ -3,7 +3,7 @@ import { FaRegTrashAlt } from "react-icons/fa";
 
 import { useEffect, useState } from "react";
 
-import { collection, query } from "firebase/firestore";
+import { collection, query, onSnapshot } from "firebase/firestore";
 import { db } from "./firebase";
 
 const style = {
@@ -16,14 +16,16 @@ export default function TaskList({ setTask, tasks }) {
 
     useEffect(() => {
         const q = query(collection(db, "tasks"));
-        const unsubscribe = q.onSnapshot((querySnapshot) => {
+        const unsubscribe = onSnapshot(q, (querySnapshot) => {
             const tasks = [];
             querySnapshot.forEach((doc) => {
+
                 tasks.push(doc.data().task);
             });
             setTask(tasks);
         }
-        );
+        )
+        return unsubscribe;
     }, []);
 
     const handleDeleteTask = (index) => {
