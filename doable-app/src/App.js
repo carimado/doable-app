@@ -1,6 +1,12 @@
 // import InputBox from './InputBox';
 // import TaskList from './TaskList';
-import { useState } from 'react';
+
+import Task from './Task';
+
+import { useState, useEffect } from 'react';
+import { collection, query, onSnapshot } from "firebase/firestore";
+import { db } from "./firebase";
+
 
 const style = {
   bg: `h-screen w-screen p-4 bg-gradient-to-r from-[#2F80ED] to-[#56CCF2]`,
@@ -16,7 +22,21 @@ function App() {
   const [tasks, setTask] = useState([]);
 
   // Create Todo
+
   // Read Todo
+  useEffect(() => {
+    const q = query(collection(db, "tasks"));
+    const unsubscribe = onSnapshot(q, (querySnapshot) => {
+      let tasksArr = [];
+      console.log(tasksArr.text)
+      querySnapshot.forEach((doc) => {
+        tasksArr.push({...doc.data(), id: doc.id });
+      });
+      setTask(tasksArr);
+    }
+    )
+    return unsubscribe;
+  }, []);
   // Update Todo
   // Delete Todo
 
@@ -32,14 +52,18 @@ function App() {
           <input type="text" className={style.input} placeholder="Add a task" />
           <button type="submit" className={style.button}>Add</button>
         </form>
-        {/* <InputBox onTaskAdd={handleAddTask}/>
-        <TaskList tasks={tasks} setTask={setTask} /> */}
+        <ul>
+          {tasks.map((task, index) => (
+            <Task key={index} task={task} />
+          ))}
+        </ul>
         <p className={style.count}>You have 2 Tasks Left</p>
       </div>
     </div>
+  );
+          }
 
-  )
-}
-
+{/* <InputBox onTaskAdd={handleAddTask}/>
+<TaskList tasks={tasks} setTask={setTask} /> */}
 
 export default App;
