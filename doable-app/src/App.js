@@ -4,7 +4,7 @@
 import Task from './Task';
 
 import { useState, useEffect } from 'react';
-import { collection, query, onSnapshot } from "firebase/firestore";
+import { collection, query, onSnapshot, updateDoc, doc } from "firebase/firestore";
 import { db } from "./firebase";
 
 
@@ -38,6 +38,12 @@ function App() {
     return unsubscribe;
   }, []);
   // Update Todo
+  const toggleChecked = async (task) => {
+    await updateDoc(doc(db, "tasks", task.id), {
+      completed: !task.completed,
+    });
+  }
+
   // Delete Todo
 
   // const handleAddTask = (newTask) => {
@@ -54,7 +60,7 @@ function App() {
         </form>
         <ul>
           {tasks.map((task, index) => (
-            <Task key={index} task={task} />
+            <Task key={index} task={task} toggleChecked={toggleChecked}/>
           ))}
         </ul>
         <p className={style.count}>You have 2 Tasks Left</p>
