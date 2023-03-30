@@ -13,7 +13,7 @@ const style = {
 
 }
 
-export default function Task({ task, toggleChecked }) {
+export default function Task({ task, toggleChecked, deleteTask }) {
 
     return (
     <li className={task.completed ? style.liChecked : style.li}>
@@ -21,7 +21,7 @@ export default function Task({ task, toggleChecked }) {
             <input onChange={() => toggleChecked(task)} type="checkbox" className={style.checkbox} checked={task.completed ? 'checked' : ''} />
             <p onClick={() => toggleChecked(task)} className={task.completed ? style.textChecked : style.text}>{task.text}</p>
         </div>
-        <button className={style.deleteButton}><FaRegTrashAlt /></button>
+        <button onClick={() => deleteTask(task.id)} className={style.deleteButton}><FaRegTrashAlt /></button>
     </li>
     )
 }

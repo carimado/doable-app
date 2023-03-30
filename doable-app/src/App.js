@@ -4,7 +4,7 @@
 import Task from './Task';
 
 import { useState, useEffect } from 'react';
-import { collection, query, onSnapshot, updateDoc, doc } from "firebase/firestore";
+import { collection, query, onSnapshot, updateDoc, doc, addDoc, deleteDoc } from "firebase/firestore";
 import { db } from "./firebase";
 
 
@@ -20,8 +20,21 @@ const style = {
 
 function App() {
   const [tasks, setTask] = useState([]);
+  const [input, setInput] = useState('');
 
   // Create Todo
+  const handleAddTask = async (e) => {
+    e.preventDefault();
+    if (input === '') {
+      return;
+    } else {
+      await addDoc(collection(db, "tasks"), {
+        text: input,
+        completed: false,
+      });
+      setInput('');
+    }
+  }
 
   // Read Todo
   useEffect(() => {
@@ -37,6 +50,7 @@ function App() {
     )
     return unsubscribe;
   }, []);
+
   // Update Todo
   const toggleChecked = async (task) => {
     await updateDoc(doc(db, "tasks", task.id), {
@@ -45,25 +59,30 @@ function App() {
   }
 
   // Delete Todo
+  const deleteTask = async (id) => {
+    await deleteDoc(doc(db, "tasks", id));
+  }
 
-  // const handleAddTask = (newTask) => {
-  //   setTask([...tasks, newTask]);
-  // };
 
   return (
     <div className={style.bg}>
       <div className={style.container}>
         <h1 className={style.header}>Doable App</h1>
-        <form className={style.form}>
-          <input type="text" className={style.input} placeholder="Add a task" />
-          <button type="submit" className={style.button}>Add</button>
+        <form 
+          value={input} 
+          onChange={(e) => setInput(e.target.value)} 
+          onSubmit={handleAddTask} 
+          className={style.form}>
+            <input type="text" className={style.input} placeholder="Add a task" />
+            <button type="submit" className={style.button}>Add</button>
         </form>
         <ul>
           {tasks.map((task, index) => (
-            <Task key={index} task={task} toggleChecked={toggleChecked}/>
+            <Task key={index} task={task} toggleChecked={toggleChecked} deleteTask={deleteTask}/>
           ))}
         </ul>
-        <p className={style.count}>You have 2 Tasks Left</p>
+        {tasks.length === 0 ? <p className={style.count}>No Tasks Left</p> :
+        <p className={style.count}>{`You have ${tasks.length} Tasks Left`}</p>}
       </div>
     </div>
   );
