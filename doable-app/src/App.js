@@ -68,12 +68,14 @@ function App() {
     <div className={style.bg}>
       <div className={style.container}>
         <h1 className={style.header}>Doable App</h1>
-        <form 
-          value={input} 
-          onChange={(e) => setInput(e.target.value)} 
-          onSubmit={handleAddTask} 
-          className={style.form}>
-            <input type="text" className={style.input} placeholder="Add a task" />
+        <form onSubmit={handleAddTask} className={style.form}>
+            <input 
+              type="text" 
+              value={input} 
+              onChange={(e) => setInput(e.target.value)} 
+              className={style.input} 
+              placeholder="Add a task" 
+            />
             <button type="submit" className={style.button}>Add</button>
         </form>
         <ul>
